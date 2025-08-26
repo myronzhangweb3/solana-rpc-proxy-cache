@@ -271,7 +271,17 @@ func forwardRequest(node string, body []byte) ([]byte, error) {
 // Compute hash for method + params
 func hashRequest(req model.RpcRequest) string {
 	var hashData []interface{}
-	hashData = append(hashData, req.Method, req.Params)
+	switch req.Method {
+	case "getBlock":
+		block := req.Params.([]interface{})[0]
+		config := req.Params.([]interface{})[1].(map[string]interface{})
+		if v, ok := config["encoding"]; ok && v == "json" {
+			delete(config, "encoding")
+		}
+		hashData = append(hashData, req.Method, block, config)
+	default:
+		hashData = append(hashData, req.Method, req.Params)
+	}
 	b, _ := json.Marshal(hashData)
 	h := sha256.Sum256(b)
 	return "solana_cache:" + hex.EncodeToString(h[:])

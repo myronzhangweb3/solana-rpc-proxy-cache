@@ -9,7 +9,7 @@ services:
     depends_on:
       - solana-redis
     environment:
-      - REDIS_ADDR=redis:6379
+      - REDIS_ADDR=solana-redis:6379
       - REDIS_PASSWORD=123456
       - PROXY_NODES=https://api.devnet.solana.com
       - PROXY_NODES_TIMEOUT=1
