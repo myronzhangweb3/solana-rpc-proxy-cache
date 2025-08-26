@@ -19,7 +19,7 @@ services:
       - IDLE_CONN_TIMEOUT_SECOND=90
       - CACHE_TTL=60
       - HEALTH_CHECK_INTERVAL=30
-      - CACHEABLE_METHODS=getBlock,getSlot
+      - CACHEABLE_METHODS=getBlock
     networks:
       - solana-net
 
