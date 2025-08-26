@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  solana-proxy:
+    build: .
+    container_name: solana-proxy
+    ports:
+      - "8080:8080"
+    depends_on:
+      - solana-redis
+    environment:
+      - REDIS_ADDR=redis:6379
+      - REDIS_PASSWORD=123456
+      - PROXY_NODES=https://api.devnet.solana.com
+      - PROXY_NODES_TIMEOUT=1
+      - PROXY_NODES_TIMEOUT_SECOND=5
+      - MAX_IDLE_CONNS=1000000
+      - MAX_IDLE_CONNS_PER_HOST=10000
+      - IDLE_CONN_TIMEOUT_SECOND=90
+      - CACHE_TTL=60
+      - HEALTH_CHECK_INTERVAL=30
+      - CACHEABLE_METHODS=getBlock,getSlot
+    networks:
+      - solana-net
+
+  solana-redis:
+    image: redis:7.2-alpine
+    container_name: solana-redis
+    command: ["redis-server", "--requirepass", "123456"]
+    networks:
+      - solana-net
+
+networks:
+  solana-net:
+    driver: bridge
