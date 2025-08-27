@@ -6,6 +6,10 @@ services:
     container_name: solana-proxy
     ports:
       - "8080:8080"
+    logging:
+      options:
+        max-size: "100m"
+        max-file: "3"
     depends_on:
       - solana-redis
     environment:
@@ -26,7 +30,17 @@ services:
   solana-redis:
     image: redis:7.2-alpine
     container_name: solana-redis
-    command: ["redis-server", "--requirepass", "123456"]
+    logging:
+      options:
+        max-size: "100m"
+        max-file: "3"
+    command: [ "redis-server", "--requirepass", "123456" ]
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "123456", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
     networks:
       - solana-net
 
