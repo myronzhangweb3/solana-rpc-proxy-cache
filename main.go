@@ -258,13 +258,6 @@ func forwardRequest(node string, body []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	var rpcResp model.JSONRPCResponse
-	if err := json.Unmarshal(respBytes, &rpcResp); err == nil {
-		if rpcResp.Error != nil {
-			return nil, fmt.Errorf("JSON-RPC error [%d]: %s", rpcResp.Error.Code, rpcResp.Error.Message)
-		}
-	}
-
 	return respBytes, nil
 }
 
